@@ -3,15 +3,15 @@ package main
 import "fmt"
 
 type user struct {
-	nama    string
-	keluhan string
+	nama     string
+	keluhan  string
+	username string
+	password string
 }
 
-type dokter struct {
-}
+type arrUser [100]user
 
 func header() {
-
 	fmt.Println("------------------------------------------------")
 	fmt.Println("       Selamat datang di aplikasi konsultasi")
 	fmt.Println("              Kesehatan Online")
@@ -23,11 +23,11 @@ func header() {
 	fmt.Println()
 
 	Menu()
-
 }
 
 func Menu() {
 	var choose int
+	var users arrUser
 	fmt.Print("Silahkan masukkan keperluan anda: \n")
 
 	fmt.Println("1. Registrasi")
@@ -39,16 +39,65 @@ func Menu() {
 
 	switch choose {
 	case 1:
-		fmt.Println("Silahkan Registrasi terlebih dahulu")
+		register(&users)
 	case 2:
-		fmt.Println("Silahkan Login")
+		login(&users)
 	case 3:
 		fmt.Println("Sampai jumpa lagi")
+	case 4:
+		return
+	default:
+		fmt.Println("Pilihan tidak valid")
 	}
 
+	Menu()
 }
+
+func register(T *arrUser) {
+	var username, password string
+
+	fmt.Println("=== Registrasi ===")
+	fmt.Print("Masukkan username: ")
+	fmt.Scan(&username)
+	fmt.Print("Masukkan password: ")
+	fmt.Scan(&password)
+
+	newUser := user{
+		username: username,
+		password: password,
+	}
+
+	for i := 0; i < len(*T); i++ {
+		if T[i].username == "" && T[i].password == "" {
+			T[i] = newUser
+			fmt.Println("Registrasi berhasil!")
+			return
+		}
+
+	}
+
+	fmt.Println("Tidak dapat melakukan registrasi. Data sudah penuh.")
+}
+
+func login(T *arrUser) {
+	var username, password string
+
+	fmt.Println("=== Login ===")
+	fmt.Print("Masukkan username: ")
+	fmt.Scan(&username)
+	fmt.Print("Masukkan password: ")
+	fmt.Scan(&password)
+
+	for i := 0; i < len(*T); i++ {
+		if T[i].username == username && T[i].password == password {
+			fmt.Println("Login berhasil!")
+			return
+		}
+	}
+
+	fmt.Println("Login gagal!")
+}
+
 func main() {
-
 	header()
-
 }
