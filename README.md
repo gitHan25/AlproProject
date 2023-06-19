@@ -25,5 +25,5 @@ Cara menajalankannya:
 - Pastikan anda sudah menginstall Go di local anda. Bisa di download di sini https://go.dev/doc/install, atau anda dapat menggunakan compiler online di internet.
 - Install `tubes.exe`.
 - Setelah di install program akan otomatis terbuka di _Command Prompt_ anda.
-- Program dapat dijalankan sesuai dengan spesifikasi yang telah diberikan
-- 
+- Program dapat dijalankan sesuai dengan spesifikasi yang telah diberikan.
+
