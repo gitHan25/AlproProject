@@ -50,6 +50,7 @@ func Menu(T arrUser, A arrQuestion, n int, U int) {
 	fmt.Println("4. Lihat forum")
 	fmt.Println("5. Cari pertanyaan")
 	fmt.Println("6. Beri Tanggapan")
+	fmt.Println("7. Exit")
 	fmt.Print("Pilihan: ")
 
 	fmt.Scan(&choose)
@@ -77,7 +78,8 @@ func Menu(T arrUser, A arrQuestion, n int, U int) {
 	case 6:
 		viewForum(A, n)
 		replyDoctor(&A, n)
-
+	case 7:
+		return
 	}
 	Menu(T, A, n, U)
 }
@@ -132,7 +134,7 @@ func login(T arrUser) bool {
 
 func postQuestion(A *arrQuestion, n *int) {
 	var pertanyaan, tag string
-	fmt.Print("Mau konsultasi apa? (ketik 'cukup' untuk menghentikan): ")
+	fmt.Print("Mau konsultasi apa? : ")
 	fmt.Scan(&pertanyaan)
 	fmt.Print("Masukkan jenis keluhannya: ")
 	fmt.Scan(&tag)
@@ -225,7 +227,7 @@ func MenuDoctor(A *arrQuestion, T arrUser, n, U int) {
 		viewTag(*A, n)
 	case 4:
 		var U int
-		findUser(*A, T, U, n)
+		findUser(*A, T, U)
 	case 5:
 		selectionSort(&T, U)
 		viewUser(T, U)
@@ -233,7 +235,7 @@ func MenuDoctor(A *arrQuestion, T arrUser, n, U int) {
 	}
 
 }
-func findUser(A arrQuestion, T arrUser, U int, n int) {
+func findUser(A arrQuestion, T arrUser, U int) {
 	selectionSort(&T, U)
 	fmt.Print("Masukkan nama yang ingin dicari: ")
 	var searchName string
@@ -246,29 +248,29 @@ func findUser(A arrQuestion, T arrUser, U int, n int) {
 	} else {
 		fmt.Println("Pasien tidak ada")
 	}
-
 }
 
 func binarySearch(T arrUser, U int, s string) int {
-
 	var found int = -1
 	var med int
 	var kiri int = 0
 	var kanan int = U - 1
+
 	for kiri <= kanan && found == -1 {
 		med = (kiri + kanan) / 2
+
 		if s < T[med].nama {
 			kanan = med - 1
 		} else if s > T[med].nama {
 			kiri = med + 1
-
 		} else {
 			found = med
 		}
-
 	}
-	return found
+
+	return med
 }
+
 func viewTag(A arrQuestion, n int) {
 
 	fmt.Println("=== Jumlah Tag ===")
