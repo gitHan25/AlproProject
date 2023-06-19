@@ -79,21 +79,24 @@ func Menu(T arrUser, A arrQuestion, n int, U int) {
 		viewForum(A, n)
 		replyDoctor(&A, n)
 	case 7:
+		fmt.Println("Sampai jumpa lagi!")
 		return
 	}
 	Menu(T, A, n, U)
 }
 
+//Input data User
 func register(T *arrUser, U *int) {
 	var username, password, nama string
 
 	fmt.Println("=== Registrasi ===")
-	fmt.Println("Masukkan nama anda: ")
+	fmt.Print("Masukkan nama anda: ")
 	fmt.Scan(&nama)
 	fmt.Print("Masukkan username: ")
 	fmt.Scan(&username)
 	fmt.Print("Masukkan password: ")
 	fmt.Scan(&password)
+	//temporary arrUser
 
 	newUser := user{
 		nama:     nama,
@@ -132,15 +135,34 @@ func login(T arrUser) bool {
 	return false
 }
 
+//Input pertanyaan User
 func postQuestion(A *arrQuestion, n *int) {
 	var pertanyaan, tag string
 	fmt.Print("Mau konsultasi apa? : ")
 	fmt.Scan(&pertanyaan)
 	fmt.Print("Masukkan jenis keluhannya: ")
 	fmt.Scan(&tag)
+	//Sequential Search
 	index := cekTag(*A, tag, *n)
 	if index != -1 {
 		A[index].jumlahTag++
+		newQuestion := question{
+			keluhan:         pertanyaan,
+			tag:             tag,
+			jumlahTag:       1,
+			balasanDokter:   "",
+			TanggapanPasien: "",
+		}
+		for i := 0; i < len(*A); i++ {
+			if A[i].keluhan == "" && A[i].tag == "" {
+
+				A[i] = newQuestion
+				*n++
+				fmt.Println("Pertanyaan berhasil diposting!")
+				return
+			}
+		}
+
 	}
 	if index == -1 {
 		newQuestion := question{
@@ -160,10 +182,12 @@ func postQuestion(A *arrQuestion, n *int) {
 				return
 			}
 		}
+
+		fmt.Println("Kesalahan: Kapasitas tanya sudah penuh!")
 	}
-	fmt.Println("Kesalahan: Kapasitas tanya sudah penuh!")
 }
 
+//Lihat forum pertanyaan
 func viewForum(A arrQuestion, n int) {
 	if n == 0 {
 		fmt.Println("Belum ada pertanyaan nih")
@@ -182,6 +206,7 @@ func viewForum(A arrQuestion, n int) {
 	}
 }
 
+//Cari pertanyaan berdasarkan tag. Sequential Search.
 func findTopic(A arrQuestion, topic string, n int) {
 	var jumlah int = 0
 	fmt.Println("Beberapa pertanyaan terkait: ")
@@ -202,6 +227,7 @@ func findTopic(A arrQuestion, topic string, n int) {
 	}
 }
 
+//Tampilan dokter
 func MenuDoctor(A *arrQuestion, T arrUser, n, U int) {
 	var choose int
 
@@ -226,7 +252,7 @@ func MenuDoctor(A *arrQuestion, T arrUser, n, U int) {
 		sortTag(A, n)
 		viewTag(*A, n)
 	case 4:
-		var U int
+
 		findUser(*A, T, U)
 	case 5:
 		selectionSort(&T, U)
@@ -235,6 +261,8 @@ func MenuDoctor(A *arrQuestion, T arrUser, n, U int) {
 	}
 
 }
+
+//Dokter dapat melakukan pencarian pasien dan tampilkan apa keluhannya(jika ada).
 func findUser(A arrQuestion, T arrUser, U int) {
 	selectionSort(&T, U)
 	fmt.Print("Masukkan nama yang ingin dicari: ")
@@ -250,6 +278,7 @@ func findUser(A arrQuestion, T arrUser, U int) {
 	}
 }
 
+//Untuk mencari pasien.
 func binarySearch(T arrUser, U int, s string) int {
 	var found int = -1
 	var med int
@@ -259,18 +288,21 @@ func binarySearch(T arrUser, U int, s string) int {
 	for kiri <= kanan && found == -1 {
 		med = (kiri + kanan) / 2
 
-		if s < T[med].nama {
-			kanan = med - 1
-		} else if s > T[med].nama {
-			kiri = med + 1
+		if s != T[med].nama {
+			if s < T[med].nama {
+				kanan = med - 1
+			} else {
+				kiri = med + 1
+			}
 		} else {
 			found = med
 		}
 	}
 
-	return med
+	return found
 }
 
+//Tampilkan jumlah tag penyakit secara berurut.
 func viewTag(A arrQuestion, n int) {
 
 	fmt.Println("=== Jumlah Tag ===")
@@ -287,6 +319,8 @@ func cekTag(A arrQuestion, tag string, n int) int {
 	}
 	return -1
 }
+
+//Tampilkan nama pasien.
 func viewUser(T arrUser, U int) {
 	for i := 0; i < U; i++ {
 		fmt.Println(i+1, T[i].nama)
@@ -305,6 +339,7 @@ func sortTag(A *arrQuestion, n int) { //insertion sort
 	}
 }
 
+//Dokter dapat menanggapi pertanyaan dari pasien.
 func replyQuestion(A *arrQuestion, n int) {
 	var reply string
 	fmt.Print("Pilih nomor pertanyaan yang ingin Anda balas: ")
@@ -322,6 +357,7 @@ func replyQuestion(A *arrQuestion, n int) {
 	}
 }
 
+//Pasien dapat menanggapi kembali saran dari dokter.
 func replyDoctor(A *arrQuestion, n int) {
 	var reply string
 
@@ -342,6 +378,7 @@ func replyDoctor(A *arrQuestion, n int) {
 
 }
 
+//Urutkan nama pasien dari A-Z.
 func selectionSort(T *arrUser, U int) {
 	for i := 0; i < U-1; i++ {
 		maxIndex := i
